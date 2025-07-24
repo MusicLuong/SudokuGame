@@ -4,7 +4,7 @@ let puzzle = [];
 
 function generateSudoku() {
     solution = generateFullBoard();
-    puzzle = maskBoard(solution, level);
+    puzzle = maskBoard(solution);
     renderBoard(puzzle);
 }
 
@@ -14,7 +14,7 @@ function renderBoard(board) {
         for (let col = 0; col < 9; col++) {
             const input = document.createElement('input');   //Tạo ô nhập liệu
             input.classList.add('cell');
-            input.setAttribute('maxlength', '1');
+            input.setAttribute('maxlength', '1'); //Chi cho phep nhap tu 1 - 9
 
             if ((row % 3 === 0 && row !== 0)) input.style.borderTop = '2px solid black';
             if ((col % 3 === 0 && col !== 0)) input.style.borderLeft = '2px solid black';
@@ -68,8 +68,20 @@ function isValid(board, row, col, num) {
     for (let i = 0; i < 9; i++) {
         if (board[row][i] === num || board[i][col] === num) return false;
     }
-    const boxRow = Math.floor(row / 3) * 3;
-    const boxCol = Math.floor(col / 3) * 3;
+    //VD: row = 5, col 8
+    const boxRow = Math.floor(row / 3) * 3; // (5/3)*3 = 3
+    const boxCol = Math.floor(col / 3) * 3; // (8/3)*3 = 6
+    //(0,0) (0,1) (0,2) | (0,3) (0,4) (0,5) | (0,6) (0,7) (0,8)
+    // (1,0) (1,1) (1,2) | (1,3) (1,4) (1,5) | (1,6) (1,7) (1,8)
+    // (2,0) (2,1) (2,2) | (2,3) (2,4) (2,5) | (2,6) (2,7) (2,8)
+    // -----------------+------------------+-----------------
+    // (3,0) (3,1) (3,2) | (3,3) (3,4) (3,5) | (3,6) (3,7) (3,8)
+    // (4,0) (4,1) (4,2) | (4,3) (4,4) (4,5) | (4,6) (4,7) (4,8)
+    // (5,0) (5,1) (5,2) | (5,3) (5,4) (5,5) | (5,6) (5,7) (5,8)<-
+    // -----------------+------------------+-----------------
+    // (6,0) (6,1) (6,2) | (6,3) (6,4) (6,5) | (6,6) (6,7) (6,8)
+    // (7,0) (7,1) (7,2) | (7,3) (7,4) (7,5) | (7,6) (7,7) (7,8)
+    // (8,0) (8,1) (8,2) | (8,3) (8,4) (8,5) | (8,6) (8,7) (8,8)
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (board[boxRow + i][boxCol + j] === num) return false;
@@ -78,7 +90,7 @@ function isValid(board, row, col, num) {
     return true;
 }
 
-function maskBoard(board, level) {
+function maskBoard(board) {
     const newBoard = board.map(row => row.slice());
     let clues =  36; //Thay đổi số ô trống
     let cellsToRemove = 81 - clues;
@@ -100,4 +112,4 @@ function shuffle(array) {
     }
     return array;
 }
-generateSudoku(); // load mặc định
+
